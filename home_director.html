@@ -1,0 +1,183 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>header</title>
+    <link rel="stylesheet" href="reset.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="header--container">
+        <img src="logo.png" alt="logo" class="logo">
+        <span class="welcome" id="welcome">Put welcome name here</span>
+    </div>
+    <div class="popup" id="popup">
+        <form method="post" action="">
+            <!-- <div class="popup popup--content--container"> -->
+            <div class="row" style="visibility: hidden;" id="id--box">
+                <div class="col-sm-3"><label for="id">ID: </label></div>
+                <div class="col-sm-9"><input type="text" name="id" id="id"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="taskName">Task name: </label></div>
+                <div class="col-sm-9"><input type="text" name="taskName" id="taskName" required></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="description">Description: </label></div>
+                <div class="col-sm-9"><textarea name="description" id="description" placeholder="(Optional)" rows="5"
+                        cols="30" style="resize: none;"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="attachment">Attachments: </label></div>
+                <div class="col-sm-19"><input type="file" name="attachment" id="attachment">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="startDate">Start date: </label></div>
+                <div class="col-sm-9"><input type="date" name="startDate" id="startDate" onclick="chooseStartDate()"
+                        required></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="endDate">Deadline: </label></div>
+                <div class="col-sm-9"><input type="date" name="endDate" id="endDate"
+                        onclick="chooseEndDate(startDate.value)" required></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3"><label for="department">Department: </label></div>
+                <div class="col-sm-9"><select type="text" name="department" id="department" required>
+                        <option value="">Choose a department</option>
+                    </select> </div>
+            </div>
+            <!-- </div> -->
+
+            <div class="popup--btn--container">
+                <button type="reset" class="popup--btn" onclick="closePopup('popup')">Cancel</button>
+                <!-- Change to type submit when adding database -->
+                <button type="submit" class="popup--btn"
+                    onclick="addTaskRecord('taskName','description','department','startDate','endDate')">Create</button>
+            </div>
+        </form>
+    </div>
+    <form action="" class="searchSection">
+        <div class="row">
+            <label for="search" class="col-md-3" style="text-align: right;">Search: </label>
+            <input type="text" name="search_by_task" id="search_by_task" class="searchInput col-md-3"
+                placeholder="Enter Task" onchange="searchTask(this.value)">
+            <input type="text" name="search_by_department" id="search_by_department" class="searchInput col-md-3"
+                placeholder="Enter Department" onchange="searchDept(this.value)">
+        </div>
+
+    </form>
+    <div class="overlay" id="overlay"></div>
+
+    <button class="addBtn" onclick="showPopUp()">Add</button>
+    <div class="table--container">
+        <table id="tasktable">
+            <tr>
+                <th>ID</th>
+                <th>Task name</th>
+                <th>Description</th>
+                <th>Attachments</th>
+                <th>Department</th>
+                <th>Head</th>
+                <th>Begin Date</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Operations</th>
+            </tr>
+            <!-- Sample rows -->
+            <tr id="row_1">
+                <td id="id_1">1</td>
+                <td id="taskName_1">Design the website</td>
+                <td id="description_1">teasdjasdhkajhkjvhcxkvjh</td>
+                <td id="attach_1"><a href="logo.png">Attachments</a></td>
+                <td id="dept_1">Web</td>
+                <td id="head_1">John Doe</td>
+                <td id="startDate_1">17/4/2024</td>
+                <td id="endDate_1">17/5/2024</td>
+                <td id="status_1">Pending</td>
+                <td>
+                    <button
+                        onclick="showPopUp('id_1','taskName_1','description_1','dept_1','startDate_1','endDate_1')">Edit</button>
+                    <button onclick="recordOperation('id_1',0)">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Design the website</td>
+                <td>asdjasd</td>
+                <td id="attach_1"><a href="logo.png">Attachments</a></td>
+                <td>Web</td>
+                <td>John Doe</td>
+                <td>25/4/2024</td>
+                <td>17/5/2024</td>
+                <td>Done</td>
+                <td>
+                    <button onclick="recordOperation('id_1',1)">Accept</button>
+                    <button onclick="recordOperation('id_1',2)">Deny</button>
+                </td>
+            </tr>
+            <tr id="row_1">
+                <td id="id_1">1</td>
+                <td id="taskName_1">Design the website</td>
+                <td id="description_1">teasdjasdhkajhkjvhcxkvjh</td>
+                <td id="attach_1"><a href="logo.png">Attachments</a></td>
+                <td id="dept_1">Web</td>
+                <td id="head_1">John Doe</td>
+                <td id="startDate_1">17/4/2024</td>
+                <td id="endDate_1">17/5/2024</td>
+                <td id="status_1">Pending</td>
+                <td>
+                    <button
+                        onclick="showPopUp('id_1','taskName_1','description_1','dept_1','startDate_1','endDate_1')">Edit</button>
+                    <button onclick="recordOperation('id_1',0)">Delete</button>
+                </td>
+            </tr>
+            <tr id="row_1">
+                <td id="id_1">1</td>
+                <td id="taskName_1">Design the website</td>
+                <td id="description_1">teasdjasdhkajhkjvhcxkvjh</td>
+                <td id="attach_1"><a href="logo.png">Attachments</a></td>
+                <td id="dept_1">Web</td>
+                <td id="head_1">John Doe</td>
+                <td id="startDate_1">17/4/2024</td>
+                <td id="endDate_1">17/5/2024</td>
+                <td id="status_1">Pending</td>
+                <td>
+                    <button
+                        onclick="showPopUp('id_1','taskName_1','description_1','dept_1','startDate_1','endDate_1')">Edit</button>
+                    <button onclick="recordOperation('id_1',0)">Delete</button>
+                </td>
+            </tr>
+            <tr id="row_1">
+                <td id="id_1">1</td>
+                <td id="taskName_1">Design the website</td>
+                <td id="description_1">teasdjasdhkajhkjvhcxkvjh</td>
+                <td id="attach_1"><a href="logo.png">Attachments</a></td>
+                <td id="dept_1">Web</td>
+                <td id="head_1">John Doe</td>
+                <td id="startDate_1">17/4/2024</td>
+                <td id="endDate_1">17/5/2024</td>
+                <td id="status_1">Pending</td>
+                <td>
+                    <button
+                        onclick="showPopUp('id_1','taskName_1','description_1','dept_1','startDate_1','endDate_1')">Edit</button>
+                    <button onclick="recordOperation('id_1',0)">Delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
