@@ -17,8 +17,10 @@
     <script src="script.js"></script>
 </head>
 <body>
-    <form action="create_account.php" method="POST" onsubmit="validate_account_creation()">
-        <div class="mb-1">
+    <form class="flex flex-col gap-4 h-auto w-screen p-10" action="create_account.php" method="POST" onsubmit="validate_account_creation()">
+        
+        
+        <div class="mb-2">
             <label for="first_name" class="form-label">First Name</label>
             <input type="text" class="form-control" id="first_name">
             <!-- <span id="first_name_error" style="color: red;"></span> -->
