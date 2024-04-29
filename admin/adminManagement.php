@@ -91,17 +91,17 @@
         <form onsubmit="event.preventDefault(); searchTable()" class="flex flex-row justify-center items-center h-full">
           <div class=" w-auto h-full relative">
             <input type="text" id="searchBox" placeholder="Search by name" required>
-            
+
           </div>
           <button type="button" class="glasss flex justify-center items-center" id="clearButton" onclick="clearInput()">
-              <img src="../assets/close.png" alt="Clear Icon">
-            </button>
-            <button type="submit" class="glass flex justify-center items-center">
+            <img src="../assets/close.png" alt="Clear Icon">
+          </button>
+          <button type="submit" class="glass flex justify-center items-center">
             <img src="../assets/search.png" alt="Search Icon">
           </button>
-          
+
         </form>
-        
+
         <script>
           function clearInput() {
             document.getElementById('searchBox').value = '';
@@ -200,8 +200,27 @@
                       <td><?php echo $user['yearofbirth']; ?></td>
                       <td><?php echo $user['username']; ?></td>
                       <td><?php echo $user['password']; ?></td>
-                      <td><span id="role_<?= $user['id'] ?>"
-                          class="badge badge-soft-danger mb-0"><?php echo $user['role']; ?></span></td>
+                      <td>
+                        <span id="role_<?= $user['id'] ?>" class="badge 
+                        <?php
+                        switch ($user['role']) {
+                          case 'Administrator':
+                            echo 'badge-soft-danger';
+                            break;
+                          case 'Director':
+                            echo 'badge-soft-primary';
+                            break;
+                          case 'Department Head':
+                            echo 'badge-soft-info';
+                            break;
+                          case 'Staff':
+                            echo 'badge-soft-black';
+                            break;
+                        }
+                        ?> mb-0">
+                          <?php echo $user['role']; ?>
+                        </span>
+                      </td>
                       <td><span id="department_<?= $user['id'] ?>"><?php echo $user['department']; ?></span></td>
 
                       <td>

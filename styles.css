@@ -9,7 +9,10 @@
     flex-direction: row;
     
 }
-
+.badge-soft-black {
+    background-color: #505050;
+    color: white;
+  }
 .flex-wrap{
     flex-wrap: wrap;
 }
