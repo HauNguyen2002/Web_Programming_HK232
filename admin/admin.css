@@ -178,6 +178,7 @@ a {
 .td {
   display: table-cell;
   vertical-align: middle;
+
 }
 
 input,
@@ -191,18 +192,19 @@ button {
 }
 
 #cover {
-
-  width: 650px;
-  height: 100px;
-  padding-bottom: 25px;
-  padding-left: 30px;
+  margin: 0 !important;
+  width: 450px;
+  height: 57px;
+  padding-left: 10px;
   background-color: #d1e4ff;
   border-radius: 60px;
   border: 4px solid #422800 !important;
   box-shadow: #422800 4px 4px 0 0;
-  transform: scale(0.6);
-}
 
+}
+#searchBox{
+  height: 100%;
+}
 form {
   height: 96px;
 }
@@ -219,6 +221,8 @@ input[type="text"]::placeholder {
   color: #000000;
   opacity: 0.6;
   font-weight: 400;
+  font-size: large;
+  
 }
 
 #s-cover {
@@ -229,87 +233,31 @@ input[type="text"]::placeholder {
 
 
 .glass {
-  position: relative;
-  display: block;
-  width: 120px;
-  height: 96px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+.glass img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+.glasss {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-left: 5px;
+}
+.glasss img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   cursor: pointer;
 }
 
-#s-circle {
-  position: relative;
-  top: -16px;
-  left: 25px;
-  width: 50px;
-  height: 50px;
-  margin-top: 0;
-  border-width: 15px;
-  border: 15px solid #000000;
-  background-color: transparent;
-  border-radius: 50%;
-  transition: 0.5s ease all;
-}
 
-button span {
-  position: absolute;
-  top: 52px;
-  left: 53px;
-  display: block;
-  width: 45px;
-  height: 15px;
-  background-color: transparent;
-  border-radius: 10px;
-  transform: rotateZ(52deg);
-  transition: 0.5s ease all;
-}
-
-button span:before,
-button span:after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 45px;
-  height: 15px;
-  background-color: #000000;
-  border-radius: 10px;
-  transform: rotateZ(0);
-  transition: 0.5s ease all;
-}
-
-#s-cover:hover #s-circle {
-  top: -1px;
-  width: 67px;
-  height: 15px;
-  border-width: 0;
-  background-color: #000000;
-  border-radius: 20px;
-}
-
-#s-cover:hover span {
-  top: 50%;
-  left: 66px;
-  width: 25px;
-  margin-top: -9px;
-  transform: rotateZ(0);
-}
-
-#s-cover:hover button span:before {
-  bottom: 11px;
-  transform: rotateZ(52deg);
-}
-
-#s-cover:hover button span:after {
-  bottom: -11px;
-  transform: rotateZ(-52deg);
-}
-
-#s-cover:hover button span:before,
-#s-cover:hover button span:after {
-  right: -6px;
-  width: 40px;
-  background-color: #000000;
-}
 
 .backk{
   width: 200px !important;

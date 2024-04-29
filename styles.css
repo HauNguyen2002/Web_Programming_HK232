@@ -95,6 +95,11 @@
 .mt-10 {
     margin-top: 80px;
 }
+.px-5{
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+}
 .px-10{
     padding-left: 80px;
     padding-right: 80px;
@@ -665,4 +670,7 @@ p{
 }
 .h-120{
     height: 130px;
+}
+.h-20{
+    height: 50px !important;
 }

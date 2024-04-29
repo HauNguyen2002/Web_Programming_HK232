@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ADMIN_Department</title>
+  <title>ADMIN_Management</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css">
@@ -62,8 +62,8 @@
           var table = document.querySelector(".project-list-table");
           var rows = table.getElementsByTagName("tr");
           for (var i = 1; i < rows.length; i++) {
-            var roleCell = rows[i].getElementsByTagName("td")[1];
-            var departmentCell = rows[i].getElementsByTagName("td")[2];
+            var roleCell = rows[i].getElementsByTagName("td")[5];
+            var departmentCell = rows[i].getElementsByTagName("td")[6];
             var roleMatch = currentRole === "" || roleCell.textContent.trim() === currentRole;
             var departmentMatch = currentDepartment === "" || departmentCell.textContent.trim() === currentDepartment;
             rows[i].style.display = roleMatch && departmentMatch ? "" : "none";
@@ -88,17 +88,25 @@
       </div>
 
       <div id="cover">
-        <form onsubmit="event.preventDefault(); searchTable()">
-          <div class="tb">
-            <div class="td"><input type="text" id="searchBox" placeholder="Search by name" required></div>
-            <div class="td" id="s-cover">
-              <button type="submit" class="glass">
-                <div id="s-circle"></div>
-                <span></span>
-              </button>
-            </div>
+        <form onsubmit="event.preventDefault(); searchTable()" class="flex flex-row justify-center items-center h-full">
+          <div class=" w-auto h-full relative">
+            <input type="text" id="searchBox" placeholder="Search by name" required>
+            
           </div>
+          <button type="button" class="glasss flex justify-center items-center" id="clearButton" onclick="clearInput()">
+              <img src="../assets/close.png" alt="Clear Icon">
+            </button>
+            <button type="submit" class="glass flex justify-center items-center">
+            <img src="../assets/search.png" alt="Search Icon">
+          </button>
+          
         </form>
+        
+        <script>
+          function clearInput() {
+            document.getElementById('searchBox').value = '';
+          }
+        </script>
 
         <script>
           function searchTable() {
@@ -118,6 +126,8 @@
       </div>
       <button type="button" class="buttonn-74" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add
         Department</button>
+      <button type="button" class="buttonn-74" data-bs-toggle="modal" data-bs-target="#createAccountModal">Create
+        Account</button>
     </div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css"
       integrity="sha512-pVCM5+SN2+qwj36KonHToF2p1oIvoU3bsqxphdOIWMYmgr4ZqD3t5DjKvvetKhXGc/ZG5REYTT6ltKfExEei/Q=="
@@ -129,15 +139,19 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="">
-            <div class="table-responsive bg-white rounded-xl mb-4 h-400 px-10 ">
+            <div class="table-responsive bg-white rounded-xl mb-4 h-400 px-5">
               <table class="table project-list-table table-nowrap align-middle table-borderless">
                 <thead>
                   <tr>
-                    <th scope="col" style="width: 150px;">ID</th>
-                    <th scope="col" style="width: 300px;">Full Name</th>
+                    <th scope="col" style="width: 250px;">Full Name</th>
+                    <th scope="col" style="width: 140px;">Gender</th>
+                    <th scope="col" style="width: 100px;">DOB</th>
+                    <th scope="col" style="width: 220px;">Username</th>
+                    <th scope="col" style="width: 220px;">Password</th>
                     <th scope="col" style="width: 200px;">Role</th>
-                    <th scope="col" style="width: 320px;">Department</th>
-                    <th scope="col" style="width: 200px;">Action</th>
+                    <th scope="col" style="width: 270px;">Department</th>
+                    <th scope="col" style="width: auto;">Actions</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -160,18 +174,20 @@
                   $alldepartments = pg_fetch_all($result);
 
 
-                  $query = 'SELECT users.username AS name, roles.rolename AS role, departments.departmentname AS department, users.userid AS id 
-                        FROM users 
-                        INNER JOIN roles ON users.roleid = roles.roleid 
-                        INNER JOIN departments ON users.departmentid = departments.departmentid';
+
+                  $query = 'SELECT users.fullname AS name, users.gender AS gender,users.yearofbirth AS yearofbirth, users.password AS password, users.username AS username, roles.rolename AS role, departments.departmentname AS department, users.userid AS id, permissions.permissiontype AS permission 
+                          FROM users 
+                          INNER JOIN roles ON users.roleid = roles.roleid 
+                          INNER JOIN departments ON users.departmentid = departments.departmentid
+                          INNER JOIN permissions ON roles.roleid = permissions.roleid';
 
                   $result = pg_query($dbconn, $query);
                   $users = pg_fetch_all($result);
+
                   foreach ($users as $user) {
                     ?>
 
                     <tr>
-                      <td><?php echo $user['id']; ?></td>
                       <td>
                         <div class="avatar-sm d-inline-block me-2">
                           <div class="avatar-title bg-soft-primary rounded-circle text-primary">
@@ -180,6 +196,10 @@
                         </div>
                         <a href="#" class="text-body"><?php echo $user['name']; ?></a>
                       </td>
+                      <td><?php echo $user['gender']; ?></td>
+                      <td><?php echo $user['yearofbirth']; ?></td>
+                      <td><?php echo $user['username']; ?></td>
+                      <td><?php echo $user['password']; ?></td>
                       <td><span id="role_<?= $user['id'] ?>"
                           class="badge badge-soft-danger mb-0"><?php echo $user['role']; ?></span></td>
                       <td><span id="department_<?= $user['id'] ?>"><?php echo $user['department']; ?></span></td>
@@ -208,6 +228,7 @@
                                   </div>
                                   <div class="modal-body">
                                     <select id="roleSelect<?= $user['id'] ?>" class="form-select">
+                                      <option selected disabled>Select</option>
                                       <?php foreach ($allroles as $role): ?>
                                         <?php
 
@@ -263,6 +284,7 @@
                                   </div>
                                   <div class="modal-body">
                                     <select id="departmentSelect<?= $user['id'] ?>" class="form-select">
+                                      <option selected disabled>Select</option>
                                       <?php foreach ($alldepartments as $department): ?>
                                         <option value="<?php echo $department['departmentid']; ?>">
                                           <?php echo $department['departmentname']; ?>
@@ -332,6 +354,81 @@
                               }
                             </script>
 
+
+                            <div class="modal fade" id="createAccountModal" tabindex="-1"
+                              aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Create Account</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body flex flex-col gap-2">
+                                    <input type="text" id="newFullname" class="form-control h-20" placeholder="Fullname">
+                                    <input type="text" id="newUsername" class="form-control h-20" placeholder="Username">
+                                    <input type="text" id="newPassword" class="form-control h-20" placeholder="Password">
+                                    <select id="newGender" class="form-control h-20">
+                                      <option selected disabled>Gender</option>
+                                      <option value="Male">Male</option>
+                                      <option value="Female">Female</option>
+                                      <option value="Other">Other</option>
+                                    </select>
+                                    <select id="newDOB" class="form-control h-20">
+                                      <option selected disabled>Year of birth</option>
+                                      <?php for ($i = date("Y"); $i >= 1900; $i--): ?>
+                                        <option value="<?= $i ?>"><?= $i ?></option>
+                                      <?php endfor; ?>
+                                    </select>
+
+                                    <select id="newRole" class="form-control h-20">
+                                      <option selected disabled>Role</option>
+                                      <?php
+                                      $rolesQuery = 'SELECT rolename FROM roles';
+                                      $rolesResult = pg_query($dbconn, $rolesQuery);
+                                      while ($role = pg_fetch_assoc($rolesResult)) {
+                                        echo '<option value="' . $role['rolename'] . '">' . $role['rolename'] . '</option>';
+                                      }
+                                      ?>
+                                    </select>
+
+                                    <select id="newDepartment" class="form-control h-20">
+                                      <option selected disabled>Department</option>
+                                      <?php
+                                      $departmentsQuery = 'SELECT departmentname FROM departments';
+                                      $departmentsResult = pg_query($dbconn, $departmentsQuery);
+                                      while ($department = pg_fetch_assoc($departmentsResult)) {
+                                        echo '<option value="' . $department['departmentname'] . '">' . $department['departmentname'] . '</option>';
+                                      }
+                                      ?>
+                                    </select>
+
+
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="addDepartment()">Create
+                                      Account</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <script>
+                              function addAccount() {
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", "add_account.php", true);
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                xhr.onreadystatechange = function () {
+                                  if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                                    alert("Account added successfully");
+                                    location.reload();
+                                  }
+                                }
+                                xhr.send("department_name=" + document.getElementById('newDepartmentName').value);
+                              }
+                            </script>
+
                           </li>
                         </ul>
                       </td>
@@ -350,8 +447,17 @@
 
 
     </div>
-    <button src="https://code.jquery.com/jquery-1.10.2.min.js"></button>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      $('#createAccountModal').on('hidden.bs.modal', function () {
+        $('#newRole').val($('#newRole option:first').val());
+        $('#newDepartment').val($('#newDepartment option:first').val());
+        $('#newGender').val($('#newGender option:first').val());
+        $('#newDOB').val($('#newDOB option:first').val());
+      });
+    </script>
     <script type="text/javascript"></script>
+
   </section>
 </body>

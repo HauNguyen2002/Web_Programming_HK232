@@ -15,11 +15,9 @@
   <?php include 'sidebar.php'; ?>
   <section id="hero" class="w-screen h-auto bg-gray-200">
   <?php
-    if ($_SERVER['REQUEST_URI'] == '/adminDepartment.php') {
-      include 'adminDepartment.php';
-    } else {
-      include 'adminAccount.php';
-    }
+    if ($_SERVER['REQUEST_URI'] == '/adminManagement.php') {
+      include 'adminManagement.php';
+    } 
   ?>
   </section>
 </body>

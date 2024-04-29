@@ -25,21 +25,15 @@
       <p class="text-base">Hello John</p>
     </div>
 
-    <a href="adminDepartment.php">
+    <a href="adminManagement.php">
       <div
-        class="sidebar-item items-center flex flex-row justify-start items-center <?php echo basename($_SERVER['PHP_SELF']) == 'adminDepartment.php' ? 'bg-blue-100' : ''; ?> gap-4">
+        class="sidebar-item items-center flex flex-row justify-start items-center <?php echo basename($_SERVER['PHP_SELF']) == 'adminManagement.php' ? 'bg-blue-100' : ''; ?> gap-4">
         <img alt="calendar" class="sidebar-logo w-2 h-2 object-cover" src="../assets/depart.png" />
-        <h1 class="sidebar-hug-item">Departments</h1>
+        <h1 class="sidebar-hug-item">Management</h1>
       </div>
     </a>
 
-    <a href="adminAccount.php">
-      <div
-        class="sidebar-item items-center flex flex-row justify-start items-center <?php echo basename($_SERVER['PHP_SELF']) == 'adminAccount.php' ? 'bg-blue-100' : ''; ?> gap-4">
-        <img alt="analyz" class="sidebar-logo w-2 h-2 object-cover" src="../assets/user.png" />
-        <h1 class="sidebar-hug-item">Accounts</h1>
-      </div>
-    </a>
+
   </div>
 </body>
 
