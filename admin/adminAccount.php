@@ -16,12 +16,7 @@
   <?php include 'sidebar.php'; ?>
   <section class="w-screen h-screen pl-10 flex flex-col justify-center items-center gap-2 bg-gray-200">
     <div class="w-full flex flex-row gap-4 justify-center items-center">
-      <form action="" class="search-bar">
-        <input type="search" name="search" pattern=".*\S.*" required>
-        <button class="search-btn" type="submit">
-          <span>Search</span>
-        </button>
-      </form>
+      
       <div class="flex flex-row gap-2">
         <button type="button" class=" button-74">Assign to Department</button>
         <button type="button" class=" button-74">Add Department</button>

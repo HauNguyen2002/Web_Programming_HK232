@@ -12,21 +12,79 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="admin.js"></script>
 </head>
 
 <body>
   <?php include 'sidebar.php'; ?>
-  <section class="w-screen h-screen pl-10 flex flex-col justify-center items-center gap-2 bg-gray-200">
-    <div class="w-full flex flex-row gap-4 justify-center items-center">
-      <form action="" class="search-bar">
-        <input type="search" name="search" pattern=".*\S.*" required>
-        <button class="search-btn" type="submit">
-          <span>Search</span>
+  <section class="w-screen h-screen pt-10 pl-10 flex flex-col justify-center items-center gap-2 bg-gray-200">
+    <div class="w-full flex flex-row gap-2 justify-center items-center">
+      <?php
+      $conn_str = "postgresql://webdb_owner:htx50eprzaUA@ep-weathered-poetry-a129mhzu.ap-southeast-1.aws.neon.tech/webdb?options=endpoint%3Dep-weathered-poetry-a129mhzu&sslmode=require";
+      $conn = pg_connect($conn_str);
+      // Fetch departments from database
+      $result = pg_query($conn, "SELECT departmentname FROM departments");
+      $alldepartments = pg_fetch_all($result);
+      ?>
+
+
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="departmentDropdown" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          Filter by Department
         </button>
-      </form>
+        <ul class="dropdown-menu" aria-labelledby="departmentDropdown">
+          <?php foreach ($alldepartments as $department): ?>
+            <li><a class="dropdown-item" href="#"
+                onclick="filterTable('<?php echo $department['departmentname']; ?>')"><?php echo $department['departmentname']; ?></a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+      <script>
+        function filterTable(department) {
+          var table = document.querySelector(".project-list-table");
+          var rows = table.getElementsByTagName("tr");
+          for (var i = 1; i < rows.length; i++) {
+            var cell = rows[i].getElementsByTagName("td")[2]; // Assuming department is the second column
+            var cellText = cell.textContent.trim().replace(/\s\s+/g, ' ');
+            var match = cellText === department;
+            rows[i].style.display = match ? "" : "none";
+          }
+        }
+      </script>
+      <div id="cover">
+        <form onsubmit="event.preventDefault(); searchTable()">
+          <div class="tb">
+            <div class="td"><input type="text" id="searchBox" placeholder="Search for user" required></div>
+            <div class="td" id="s-cover">
+              <button type="submit" class="glass">
+                <div id="s-circle"></div>
+                <span></span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <script>
+          function searchTable() {
+            var input = document.getElementById("searchBox");
+            var searchTerm = input.value.toLowerCase();
+            var table = document.querySelector(".project-list-table");
+            var rows = table.getElementsByTagName("tr");
+            for (var i = 1; i < rows.length; i++) {
+              var cell = rows[i].getElementsByTagName("td")[0]; // Get the first cell
+              var cellText = cell.textContent.toLowerCase().trim().replace(/\s\s+/g, ' ');
+              var match = cellText.includes(searchTerm);
+              rows[i].style.display = match ? "" : "none";
+            }
+          }
+        </script>
+
+      </div>
       <div class="flex flex-row gap-2">
-        <button type="button" class=" button-74">Assign to Department</button>
-        <button type="button" class=" button-74">Add Department</button>
+        <button type="button" class="buttonn-74" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add
+          Department</button>
       </div>
     </div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css"
@@ -52,89 +110,204 @@
                 </thead>
                 <tbody>
                   <?php
-                  $users = [
-                    [
-                      'name' => 'Frederick White',
-                      'role' => 'Head',
-                      'department' => 'Marketing',
-                      'id' => 112,
-                    ],
-                    [
-                      'name' => 'John Doe',
-                      'role' => 'Director',
-                      'department' => 'IT',
-                      'id' => 113,
-                    ],
-                    [
-                      'name' => 'Jane Smith',
-                      'role' => 'Staff',
-                      'department' => 'Sales',
-                      'id' => 114,
-                    ],
-                    [
-                      'name' => 'Alice Johnson',
-                      'role' => 'Admin',
-                      'department' => 'Human Resources',
-                      'id' => 115,
-                    ],
-                    [
-                      'name' => 'Bob Brown',
-                      'role' => 'Staff',
-                      'department' => 'IT',
-                      'id' => 116,
-                    ],
-                    [
-                      'name' => 'Charlie Davis',
-                      'role' => 'Staff',
-                      'department' => 'Marketing',
-                      'id' => 117,
-                    ],
-                    [
-                      'name' => 'David Evans',
-                      'role' => 'Staff',
-                      'department' => 'Sales',
-                      'id' => 118,
-                    ],
-                    [
-                      'name' => 'Eva Foster',
-                      'role' => 'Staff',
-                      'department' => 'Human Resources',
-                      'id' => 119,
-                    ],
-                  ];
+                  $conn_str = "postgresql://webdb_owner:htx50eprzaUA@ep-weathered-poetry-a129mhzu.ap-southeast-1.aws.neon.tech/webdb?options=endpoint%3Dep-weathered-poetry-a129mhzu&sslmode=require";
+                  $dbconn = pg_connect($conn_str);
+                  if (!$dbconn) {
+                    die("Connection failed: " . pg_last_error());
+                  }
+                  $query = 'SELECT * FROM roles';
+                  $result = pg_query($dbconn, $query);
+                  $allroles = pg_fetch_all($result);
 
+                  $query = 'SELECT * FROM users';
+                  $result = pg_query($dbconn, $query);
+                  $allusers = pg_fetch_all($result);
+
+                  $query = 'SELECT * FROM departments';
+                  $result = pg_query($dbconn, $query);
+                  $alldepartments = pg_fetch_all($result);
+
+
+                  $query = 'SELECT users.username AS name, roles.rolename AS role, departments.departmentname AS department, users.userid AS id 
+                        FROM users 
+                        INNER JOIN roles ON users.roleid = roles.roleid 
+                        INNER JOIN departments ON users.departmentid = departments.departmentid';
+
+                  // Execute the query.
+                  $result = pg_query($dbconn, $query);
+
+                  // Fetch all rows as an array.
+                  $users = pg_fetch_all($result);
                   foreach ($users as $user) {
-                    echo '
+                    ?>
+
                     <tr>
-                      
                       <td>
                         <div class="avatar-sm d-inline-block me-2">
                           <div class="avatar-title bg-soft-primary rounded-circle text-primary">
                             <i class="mdi mdi-account-circle m-0"></i>
                           </div>
                         </div>
-                        <a href="#" class="text-body">' . $user['name'] . '</a>
+                        <a href="#" class="text-body"><?php echo $user['name']; ?></a>
                       </td>
-                      <td><span class="badge badge-soft-danger mb-0">' . $user['role'] . '</span></td>
-                      <td>' . $user['department'] . '</td>  
-                      <td>' . $user['id'] . '</td>
+                      <td><span id="role_<?= $user['id'] ?>"
+                          class="badge badge-soft-danger mb-0"><?php echo $user['role']; ?></span></td>
+                      <td><span id="department_<?= $user['id'] ?>"><?php echo $user['department']; ?></span></td>
+                      <td><?php echo $user['id']; ?></td>
                       <td>
                         <ul class="list-inline mb-0">
-
-                          
                           <li class="list-inline-item dropdown">
-                            <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                            <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button"
+                              data-bs-toggle="dropdown" aria-haspopup="true">
                               <i class="bx bx-dots-vertical-rounded"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                              <a class="dropdown-item" href="#">Change Role</a>
-                              <a class="dropdown-item" href="#">Delete from apartment</a>
-     
+                              <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#myModal<?= $user['id'] ?>">Change Role</a>
+                              <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#changeDepartmentModal<?= $user['id'] ?>">Change Department</a>
                             </div>
+                            <div class="modal fade" id="myModal<?= $user['id'] ?>" tabindex="-1"
+                              aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Change Role</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <select id="roleSelect<?= $user['id'] ?>" class="form-select">
+                                      <?php foreach ($allroles as $role): ?>
+                                        <?php
+
+                                        $isAvailable = true;
+                                        foreach ($allusers as $anotherUser) {
+                                          if ($anotherUser['roleid'] == $role['roleid'] && ($role['rolename'] == 'Administrator' || $role['rolename'] == 'Director' || ($anotherUser['roleid'] == 3 && $anotherUser['roleid'] == $role['roleid'] && $anotherUser['departmentid'] == $user['departmentid']))) {
+                                            $isAvailable = false;
+                                            break;
+                                          }
+
+                                        }
+                                        if ($isAvailable): ?>
+                                          <option value="<?php echo $role['roleid']; ?>"><?php echo $role['rolename']; ?>
+                                          </option>
+                                        <?php endif; ?>
+                                      <?php endforeach; ?>
+                                    </select>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary"
+                                      onclick="changeRole(<?= $user['id'] ?>, document.getElementById('roleSelect<?= $user['id'] ?>').value)">Save
+                                      changes</button>
+                                  </div>
+                                  <script>
+                                    function changeRole(userId, roleId) {
+                                      var xhr = new XMLHttpRequest();
+                                      xhr.open("POST", "change_role.php", true);
+                                      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                      xhr.onreadystatechange = function () {
+                                        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                                          alert("Role changed successfully");
+                                          var newRoleName = this.responseText;
+                                          document.getElementById('role_' + userId).textContent = newRoleName;
+                                        }
+                                      }
+                                      xhr.send("user_id=" + userId + "&role_id=" + roleId);
+                                    }
+                                  </script>
+                                </div>
+
+                              </div>
+
+                            </div>
+                            <div class="modal fade" id="changeDepartmentModal<?= $user['id'] ?>" tabindex="-1"
+                              aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Change Department</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <select id="departmentSelect<?= $user['id'] ?>" class="form-select">
+                                      <?php foreach ($alldepartments as $department): ?>
+                                        <option value="<?php echo $department['departmentid']; ?>">
+                                          <?php echo $department['departmentname']; ?>
+                                        </option>
+                                      <?php endforeach; ?>
+                                    </select>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary"
+                                      onclick="changeDepartment(<?= $user['id'] ?>, document.getElementById('departmentSelect<?= $user['id'] ?>').value)">Save
+                                      changes</button>
+                                  </div>
+                                  <script>
+                                    function changeDepartment(userId, departmentId) {
+                                      var xhr = new XMLHttpRequest();
+                                      xhr.open("POST", "change_department.php", true);
+                                      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                      xhr.onreadystatechange = function () {
+                                        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                                          alert("Department changed successfully");
+                                          var newDepartmentName = this.responseText;
+                                          document.getElementById('department_' + userId).textContent = newDepartmentName;
+                                        }
+                                      }
+                                      xhr.send("user_id=" + userId + "&department_id=" + departmentId);
+                                    }
+                                  </script>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="modal fade" id="addDepartmentModal" tabindex="-1"
+                              aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add Department</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <input type="text" id="newDepartmentName" class="form-control"
+                                      placeholder="Department Name">
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="addDepartment()">Add
+                                      Department</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <script>
+                              function addDepartment() {
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", "add_department.php", true);
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                xhr.onreadystatechange = function () {
+                                  if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                                    alert("Department added successfully");
+                                    location.reload();
+                                  }
+                                }
+                                xhr.send("department_name=" + document.getElementById('newDepartmentName').value);
+                              }
+                            </script>
+
                           </li>
                         </ul>
                       </td>
-                    </tr>';
+                    </tr>
+
+                    <?php
                   }
                   ?>
                 </tbody>
@@ -168,7 +341,7 @@
         </div>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <button src="https://code.jquery.com/jquery-1.10.2.min.js"></button>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"></script>
   </section>

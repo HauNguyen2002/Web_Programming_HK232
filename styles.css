@@ -89,6 +89,12 @@
 .pl-10 {
     padding-left: 80px;
 }
+.pt-10 {
+    padding-top: 30px;
+}
+.mt-10 {
+    margin-top: 80px;
+}
 .px-10{
     padding-left: 80px;
     padding-right: 80px;
@@ -646,7 +652,7 @@
     width: 30%;
 }
 .bg-gray-200{
-    background-color: #80ced6;
+    background-color: #d3e2ff9e;
 }
 p{
     margin-bottom: 0 !important;
