@@ -22,15 +22,52 @@
       <?php
       $conn_str = "postgresql://webdb_owner:htx50eprzaUA@ep-weathered-poetry-a129mhzu.ap-southeast-1.aws.neon.tech/webdb?options=endpoint%3Dep-weathered-poetry-a129mhzu&sslmode=require";
       $conn = pg_connect($conn_str);
-      // Fetch departments from database
       $result = pg_query($conn, "SELECT departmentname FROM departments");
       $alldepartments = pg_fetch_all($result);
+      $res = pg_query($conn, "SELECT rolename FROM roles");
+      $allroles = pg_fetch_all($res);
       ?>
+
+      <div class="dropdown">
+        <button class="btn btn-primary backk dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          Filter by Role
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="roleDropdown">
+          <li><a class="dropdown-item" href="#" onclick="filterTable('')">All Roles</a></li>
+          <?php foreach ($allroles as $role): ?>
+            <li><a class="dropdown-item" href="#"
+                onclick="filterTable('<?php echo $role['rolename']; ?>')"><?php echo $role['rolename']; ?></a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+      <script>
+        function filterTable(role) {
+          var table = document.querySelector(".project-list-table");
+          var rows = table.getElementsByTagName("tr");
+          var dropdownButton = document.getElementById("roleDropdown");
+          for (var i = 1; i < rows.length; i++) {
+            var cell = rows[i].getElementsByTagName("td")[1];
+            var cellText = cell.textContent.trim().replace(/\s\s+/g, ' ');
+            if (role === "") {
+              rows[i].style.display = "";
+              dropdownButton.textContent = "Filter by Role";
+            } else {
+              var match = cellText === role;
+              rows[i].style.display = match ? "" : "none";
+              if (match) {
+                dropdownButton.textContent = role;
+              }
+            }
+          }
+        }
+      </script>
 
 
       <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="departmentDropdown" data-bs-toggle="dropdown"
-          aria-expanded="false">
+        <button class="btn btn-primary backk dropdown-toggle" type="button" id="departmentDropdown"
+          data-bs-toggle="dropdown" aria-expanded="false">
           Filter by Department
         </button>
         <ul class="dropdown-menu" aria-labelledby="departmentDropdown">
@@ -48,16 +85,16 @@
           var rows = table.getElementsByTagName("tr");
           var dropdownButton = document.getElementById("departmentDropdown");
           for (var i = 1; i < rows.length; i++) {
-            var cell = rows[i].getElementsByTagName("td")[2]; // Assuming department is the second column
+            var cell = rows[i].getElementsByTagName("td")[2];
             var cellText = cell.textContent.trim().replace(/\s\s+/g, ' ');
             if (department === "") {
-              rows[i].style.display = ""; // Show all rows if department is an empty string
-              dropdownButton.textContent = "Filter by Department"; // Reset the dropdown button text
+              rows[i].style.display = "";
+              dropdownButton.textContent = "Filter by Department";
             } else {
               var match = cellText === department;
               rows[i].style.display = match ? "" : "none";
               if (match) {
-                dropdownButton.textContent = department; // Change the dropdown button text to the selected department
+                dropdownButton.textContent = department;
               }
             }
           }
