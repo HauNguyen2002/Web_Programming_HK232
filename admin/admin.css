@@ -199,7 +199,7 @@ button {
   padding-left: 30px;
   background-color: #d1e4ff;
   border-radius: 60px;
-  border: 4px solid black;
+  border: 4px solid #422800 !important;
   box-shadow: #422800 4px 4px 0 0;
   transform: scale(0.6);
 }
@@ -307,4 +307,13 @@ button span:after {
   right: -6px;
   width: 40px;
   background-color: #000000;
+}
+
+.backk{
+  width: 220px !important;
+  border-radius: 40px !important;
+  background-color: #d1e4ff !important;
+  color: black !important;
+  border: 2px solid #422800 !important;
+  box-shadow: #422800 4px 4px 0 0 !important;
 }

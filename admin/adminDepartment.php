@@ -31,35 +31,42 @@
       <div class="dropdown">
         <button class="btn btn-primary backk dropdown-toggle" type="button" id="roleDropdown" data-bs-toggle="dropdown"
           aria-expanded="false">
-          Filter by Role
+          All Roles
         </button>
         <ul class="dropdown-menu" aria-labelledby="roleDropdown">
-          <li><a class="dropdown-item" href="#" onclick="filterTable('')">All Roles</a></li>
+          <li><a class="dropdown-item" href="#" onclick="filterRole('')">All Roles</a></li>
           <?php foreach ($allroles as $role): ?>
             <li><a class="dropdown-item" href="#"
-                onclick="filterTable('<?php echo $role['rolename']; ?>')"><?php echo $role['rolename']; ?></a>
+                onclick="filterRole('<?php echo $role['rolename']; ?>')"><?php echo $role['rolename']; ?></a>
             </li>
           <?php endforeach; ?>
         </ul>
       </div>
       <script>
-        function filterTable(role) {
+        var currentRole = "";
+        var currentDepartment = "";
+
+        function filterRole(role) {
+          currentRole = role;
+          filterTable();
+          document.getElementById("roleDropdown").textContent = role || "All Roles";
+        }
+
+        function filterDepartment(department) {
+          currentDepartment = department;
+          filterTable();
+          document.getElementById("departmentDropdown").textContent = department || "All Departments";
+        }
+
+        function filterTable() {
           var table = document.querySelector(".project-list-table");
           var rows = table.getElementsByTagName("tr");
-          var dropdownButton = document.getElementById("roleDropdown");
           for (var i = 1; i < rows.length; i++) {
-            var cell = rows[i].getElementsByTagName("td")[1];
-            var cellText = cell.textContent.trim().replace(/\s\s+/g, ' ');
-            if (role === "") {
-              rows[i].style.display = "";
-              dropdownButton.textContent = "Filter by Role";
-            } else {
-              var match = cellText === role;
-              rows[i].style.display = match ? "" : "none";
-              if (match) {
-                dropdownButton.textContent = role;
-              }
-            }
+            var roleCell = rows[i].getElementsByTagName("td")[1];
+            var departmentCell = rows[i].getElementsByTagName("td")[2];
+            var roleMatch = currentRole === "" || roleCell.textContent.trim() === currentRole;
+            var departmentMatch = currentDepartment === "" || departmentCell.textContent.trim() === currentDepartment;
+            rows[i].style.display = roleMatch && departmentMatch ? "" : "none";
           }
         }
       </script>
@@ -68,42 +75,22 @@
       <div class="dropdown">
         <button class="btn btn-primary backk dropdown-toggle" type="button" id="departmentDropdown"
           data-bs-toggle="dropdown" aria-expanded="false">
-          Filter by Department
+          All Departments
         </button>
         <ul class="dropdown-menu" aria-labelledby="departmentDropdown">
-          <li><a class="dropdown-item" href="#" onclick="filterTable('')">All Departments</a></li>
+          <li><a class="dropdown-item" href="#" onclick="filterDepartment('')">All Departments</a></li>
           <?php foreach ($alldepartments as $department): ?>
             <li><a class="dropdown-item" href="#"
-                onclick="filterTable('<?php echo $department['departmentname']; ?>')"><?php echo $department['departmentname']; ?></a>
+                onclick="filterDepartment('<?php echo $department['departmentname']; ?>')"><?php echo $department['departmentname']; ?></a>
             </li>
           <?php endforeach; ?>
         </ul>
       </div>
-      <script>
-        function filterTable(department) {
-          var table = document.querySelector(".project-list-table");
-          var rows = table.getElementsByTagName("tr");
-          var dropdownButton = document.getElementById("departmentDropdown");
-          for (var i = 1; i < rows.length; i++) {
-            var cell = rows[i].getElementsByTagName("td")[2];
-            var cellText = cell.textContent.trim().replace(/\s\s+/g, ' ');
-            if (department === "") {
-              rows[i].style.display = "";
-              dropdownButton.textContent = "Filter by Department";
-            } else {
-              var match = cellText === department;
-              rows[i].style.display = match ? "" : "none";
-              if (match) {
-                dropdownButton.textContent = department;
-              }
-            }
-          }
-        }
-      </script>
+
       <div id="cover">
         <form onsubmit="event.preventDefault(); searchTable()">
           <div class="tb">
-            <div class="td"><input type="text" id="searchBox" placeholder="Search for user" required></div>
+            <div class="td"><input type="text" id="searchBox" placeholder="Search by name" required></div>
             <div class="td" id="s-cover">
               <button type="submit" class="glass">
                 <div id="s-circle"></div>
@@ -120,7 +107,7 @@
             var table = document.querySelector(".project-list-table");
             var rows = table.getElementsByTagName("tr");
             for (var i = 1; i < rows.length; i++) {
-              var cell = rows[i].getElementsByTagName("td")[0]; // Get the first cell
+              var cell = rows[i].getElementsByTagName("td")[0];
               var cellText = cell.textContent.toLowerCase().trim().replace(/\s\s+/g, ' ');
               var match = cellText.includes(searchTerm);
               rows[i].style.display = match ? "" : "none";
@@ -148,10 +135,10 @@
               <table class="table project-list-table table-nowrap align-middle table-borderless">
                 <thead>
                   <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Role</th>
-                    <th scope="col">Department</th>
-                    <th scope="col">Account_ID</th>
+                    <th scope="col"style="width: 300px;">Full Name</th>
+                    <th scope="col"style="width: 200px;">Role</th>
+                    <th scope="col"style="width: 320px;">Department</th>
+                    <th scope="col"style="width: 150px;">ID</th>
                     <th scope="col" style="width: 200px;">Action</th>
                   </tr>
                 </thead>
@@ -363,30 +350,9 @@
           </div>
         </div>
       </div>
-      <div class="row g-0 align-items-center pb-4">
-        <div class="col-sm-6">
-          <div>
-            <p class="mb-sm-0">Showing 1 to 10 of 57 entries</p>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="float-sm-end">
-            <ul class="pagination mb-sm-0">
-              <li class="page-item disabled">
-                <a href="#" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
-              </li>
-              <li class="page-item active"><a href="#" class="page-link">1</a></li>
-              <li class="page-item"><a href="#" class="page-link">2</a></li>
-              <li class="page-item"><a href="#" class="page-link">3</a></li>
-              <li class="page-item"><a href="#" class="page-link">4</a></li>
-              <li class="page-item"><a href="#" class="page-link">5</a></li>
-              <li class="page-item">
-                <a href="#" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+
+
+
     </div>
     <button src="https://code.jquery.com/jquery-1.10.2.min.js"></button>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
