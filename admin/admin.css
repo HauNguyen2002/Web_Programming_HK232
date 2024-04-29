@@ -19,6 +19,7 @@ input {
 body,
 input {
   color: #171717;
+  
 }
 
 body,
@@ -41,15 +42,15 @@ section {
   background-color: #d1e4ff;
   border: 2px solid #422800;
   border-radius: 30px;
-  width: auto;
+  width: 180px;
   height: 57px;
   box-shadow: #422800 4px 4px 0 0;
   color: #422800;
   cursor: pointer;
   display: inline-block;
   font-weight: 600;
-  font-size: 18px;
-  padding: 0 18px;
+  font-size: medium;
+  padding: 0 12px;
   line-height: 50px;
   text-align: center;
   text-decoration: none;
@@ -163,12 +164,10 @@ a {
 }
 
 
-/* The Modal (background) */
 
 * {
   outline: none;
 }
-
 
 
 .tb {
@@ -193,7 +192,7 @@ button {
 
 #cover {
 
-  width: 550px;
+  width: 650px;
   height: 100px;
   padding-bottom: 25px;
   padding-left: 30px;
@@ -211,12 +210,15 @@ form {
 input[type="text"] {
   width: 100%;
   height: 96px;
-  font-size: 40px;
+  font-size: larger;
+  font-weight: bolder;
   line-height: 1;
 }
 
 input[type="text"]::placeholder {
   color: #000000;
+  opacity: 0.6;
+  font-weight: 400;
 }
 
 #s-cover {
@@ -310,10 +312,13 @@ button span:after {
 }
 
 .backk{
-  width: 220px !important;
+  width: 200px !important;
   border-radius: 40px !important;
   background-color: #d1e4ff !important;
   color: black !important;
   border: 2px solid #422800 !important;
   box-shadow: #422800 4px 4px 0 0 !important;
+  font-weight: 600 !important;
+  font-size: medium !important;
+  height: 57px !important; 
 }

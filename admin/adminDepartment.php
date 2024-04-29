@@ -116,10 +116,8 @@
         </script>
 
       </div>
-      <div class="flex flex-row gap-2">
-        <button type="button" class="buttonn-74" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add
-          Department</button>
-      </div>
+      <button type="button" class="buttonn-74" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add
+        Department</button>
     </div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css"
       integrity="sha512-pVCM5+SN2+qwj36KonHToF2p1oIvoU3bsqxphdOIWMYmgr4ZqD3t5DjKvvetKhXGc/ZG5REYTT6ltKfExEei/Q=="
@@ -135,10 +133,10 @@
               <table class="table project-list-table table-nowrap align-middle table-borderless">
                 <thead>
                   <tr>
-                    <th scope="col"style="width: 300px;">Full Name</th>
-                    <th scope="col"style="width: 200px;">Role</th>
-                    <th scope="col"style="width: 320px;">Department</th>
-                    <th scope="col"style="width: 150px;">ID</th>
+                    <th scope="col" style="width: 150px;">ID</th>
+                    <th scope="col" style="width: 300px;">Full Name</th>
+                    <th scope="col" style="width: 200px;">Role</th>
+                    <th scope="col" style="width: 320px;">Department</th>
                     <th scope="col" style="width: 200px;">Action</th>
                   </tr>
                 </thead>
@@ -167,15 +165,13 @@
                         INNER JOIN roles ON users.roleid = roles.roleid 
                         INNER JOIN departments ON users.departmentid = departments.departmentid';
 
-                  // Execute the query.
                   $result = pg_query($dbconn, $query);
-
-                  // Fetch all rows as an array.
                   $users = pg_fetch_all($result);
                   foreach ($users as $user) {
                     ?>
 
                     <tr>
+                      <td><?php echo $user['id']; ?></td>
                       <td>
                         <div class="avatar-sm d-inline-block me-2">
                           <div class="avatar-title bg-soft-primary rounded-circle text-primary">
@@ -187,7 +183,7 @@
                       <td><span id="role_<?= $user['id'] ?>"
                           class="badge badge-soft-danger mb-0"><?php echo $user['role']; ?></span></td>
                       <td><span id="department_<?= $user['id'] ?>"><?php echo $user['department']; ?></span></td>
-                      <td><?php echo $user['id']; ?></td>
+
                       <td>
                         <ul class="list-inline mb-0">
                           <li class="list-inline-item dropdown">
