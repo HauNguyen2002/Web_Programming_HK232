@@ -34,6 +34,7 @@
           Filter by Department
         </button>
         <ul class="dropdown-menu" aria-labelledby="departmentDropdown">
+          <li><a class="dropdown-item" href="#" onclick="filterTable('')">All Departments</a></li>
           <?php foreach ($alldepartments as $department): ?>
             <li><a class="dropdown-item" href="#"
                 onclick="filterTable('<?php echo $department['departmentname']; ?>')"><?php echo $department['departmentname']; ?></a>
@@ -45,11 +46,20 @@
         function filterTable(department) {
           var table = document.querySelector(".project-list-table");
           var rows = table.getElementsByTagName("tr");
+          var dropdownButton = document.getElementById("departmentDropdown");
           for (var i = 1; i < rows.length; i++) {
             var cell = rows[i].getElementsByTagName("td")[2]; // Assuming department is the second column
             var cellText = cell.textContent.trim().replace(/\s\s+/g, ' ');
-            var match = cellText === department;
-            rows[i].style.display = match ? "" : "none";
+            if (department === "") {
+              rows[i].style.display = ""; // Show all rows if department is an empty string
+              dropdownButton.textContent = "Filter by Department"; // Reset the dropdown button text
+            } else {
+              var match = cellText === department;
+              rows[i].style.display = match ? "" : "none";
+              if (match) {
+                dropdownButton.textContent = department; // Change the dropdown button text to the selected department
+              }
+            }
           }
         }
       </script>
